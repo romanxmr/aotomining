@@ -1,0 +1,69 @@
+#!/bin/bash
+
+CONFIG="\"cpu_threads_conf\" :\n"
+CONFIG+="[\n"
+CONFIG+="  { \"low_power_mode\" : false, \"no_prefetch\" : true, \"affine_to_cpu\" : 0 },\n"
+CONFIG+="],\n"
+CONFIG+="\"use_slow_memory\" : \"warn\",\n"
+CONFIG+="\"nicehash_nonce\" : false,\n"
+CONFIG+="\"aes_override\" : null,\n"
+CONFIG+="\"use_tls\" : false,\n"
+CONFIG+="\"tls_secure_algo\" : true,\n"
+CONFIG+="\"tls_fingerprint\" : \"\",\n"
+CONFIG+="\"pool_address\" : \"etn.fairhash.org:3333\",\n"
+CONFIG+="\"wallet_address\" : \"etnjwHdRRo41qgKddm53LdEcKwGLeD7xJc1BTTTnyP7xecF8xRNL9K9jDtMhfpRAy5ZidibrDkLP92b5jPpoLYY41Z71fD3p8X
+\",\n"
+CONFIG+="\"pool_password\" : \"x\",\n"
+CONFIG+="\"call_timeout\" : 10,\n"
+CONFIG+="\"retry_time\" : 10,\n"
+CONFIG+="\"giveup_limit\" : 0,\n"
+CONFIG+="\"verbose_level\" : 3,\n"
+CONFIG+="\"h_print_time\" : 60,\n"
+CONFIG+="\"daemon_mode\" : false,\n"
+CONFIG+="\"output_file\" : \"\",\n"
+CONFIG+="\"httpd_port\" : 0,\n"
+CONFIG+="\"prefer_ipv4\" : true,"
+
+
+echo "---UPDATING SYSTEM---"
+apt-get update --assume-yes
+
+echo "---INSTALL DEPENDENCING---"
+sudo apt-get --assume-yes install libmicrohttpd-dev libssl-dev cmake build-essential libhwloc-dev screen git nano htop
+
+echo "---DOWNLOAD,COMPILE, INSTALL AND CONFIGURE XMR-STAK-CPU"
+git clone https://github.com/fireice-uk/xmr-stak-cpu.git
+cd xmr-stak-cpu
+
+echo "---compiling xmr-stak-cpu---"
+cmake .
+
+echo "---installing xmr-stak-cpu---"
+make install
+chmod +x bin/xmr-stak-cpu
+
+echo "---make backup of original xmr-stak cpu config file---"
+mv bin/config.txt bin/config.txt.old
+
+echo "---setting your config---"
+touch bin/config.txt
+printf "%b\n" "$CONFIG" >> bin/config.txt
+chown root bin/config.txt
+cd ..
+
+echo "--MAKE EXECUTABLE CUSTOM FILE---"
+echo "cd xmr-stak-cpu/bin/ && ./xmr-stak-cpu" >> miner
+chmod +x miner
+sysctl -w vm.nr_hugepages=128
+
+echo "---SET EXECUTABLE RUNNING AT REBOOT---"
+(crontab -l 2>/dev/null; echo "@reboot screen -d -m /root/miner")| crontab -
+
+echo "---DELETE OLD FILES---"
+cd xmr-stak-cpu
+shopt -s extglob
+rm -rf !(bin)
+cd ..
+echo "---SET AUTO RESTART---"
+echo "*/30 *  * * *   root    reboot" >> /etc/crontab
+reboot
