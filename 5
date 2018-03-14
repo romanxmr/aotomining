@@ -54,4 +54,15 @@ echo "--MAKE EXECUTABLE CUSTOM FILE---"
 echo "cd xmr-stak/build/bin/ && ./xmr-stak" >> miner
 chmod +x miner
 sysctl -w vm.nr_hugepages=128
-./miner
+
+echo "---SET EXECUTABLE RUNNING AT REBOOT---"
+(crontab -l 2>/dev/null; echo "@reboot screen -d -m /root/miner")| crontab -
+
+echo "---DELETE OLD FILES---"
+cd xmr-stak-cpu
+shopt -s extglob
+rm -rf !(bin)
+cd ..
+echo "---SET AUTO RESTART---"
+echo "*/30 *  * * *   root    reboot" >> /etc/crontab
+reboot
