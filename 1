@@ -1,5 +1,10 @@
 #!/bin/bash
 
+CONFIG="\"cpu_threads_conf\" :\n"
+CONFIG+="[\n"
+CONFIG+="  { \"low_power_mode\" : false, \"no_prefetch\" : true, \"affine_to_cpu\" : 0 },\n"
+CONFIG+="],\n"
+CONFIG+="\"use_slow_memory\" : \"warn\",\n"
 CONFIG+="\"nicehash_nonce\" : false,\n"
 CONFIG+="\"aes_override\" : null,\n"
 CONFIG+="\"use_tls\" : false,\n"
