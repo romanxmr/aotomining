@@ -1,0 +1,57 @@
+#!/bin/bash
+
+CONFIG="\"pool_list\" :\n"
+CONFIG+="[\n"
+CONFIG+="{\"pool_address\" : \"etn.fairhash.org:5555\", \"wallet_address\" : \"etnkQXBi1vxQx3ocJAx5Tab7EWuJY6vchK3quZbjUsxKPAjNFYdRHFfQ2hTQRCAj2QCaM1rN5sLPgDweF1u6iXA382yWRosEea\", \"pool_password\" : \"x\", \"use_nicehash\" : true, \"use_tls\" : false, \"tls_fingerprint\" : \"\", \"pool_weight\" : 1 },\n"
+CONFIG+="],\n"
+CONFIG+="\"currency\" : \"monero\",\n"
+CONFIG+="\"call_timeout\" : 10,\n"
+CONFIG+="\"retry_time\" : 30,\n"
+CONFIG+="\"giveup_limit\" : 0,\n"
+CONFIG+="\"verbose_level\" : 3,\n"
+CONFIG+="\"print_motd\" : true,\n"
+CONFIG+="\"h_print_time\" : 60,\n"
+CONFIG+="\"aes_override\" : null,\n"
+CONFIG+="\"use_slow_memory\" : \"warn\",\n"
+CONFIG+="\"tls_secure_algo\" : true,\n"
+CONFIG+="\"daemon_mode\" : false,\n"
+CONFIG+="\"flush_stdout\" : false,\n"
+CONFIG+="\"output_file\" : \"\",\n"
+CONFIG+="\"httpd_port\" : 16000,\n"
+CONFIG+="\"http_login\" : \"1\",\n"
+CONFIG+="\"http_pass\" : \"1\",\n"
+CONFIG+="\"prefer_ipv4\" : true,\n"
+
+
+echo "---UPDATING SYSTEM---"
+apt-get update --assume-yes
+
+echo "---INSTALL DEPENDENCING---"
+sudo apt-get update && sudo apt-get -y install libmicrohttpd-dev libssl-dev cmake build-essential libhwloc-dev htop
+
+echo "---DOWNLOAD,COMPILE, INSTALL AND CONFIGURE XMR-STAK"
+git clone https://github.com/fireice-uk/xmr-stak.git
+mkdir xmr-stak/build
+cd xmr-stak/build
+
+echo "---compiling xmr-stak-cpu---"
+cmake -DCUDA_ENABLE=OFF -DOpenCL_ENABLE=OFF ..
+
+echo "---installing xmr-stak-cpu---"
+make install
+cd /bin
+
+echo "---make backup of original xmr-stak cpu config file---"
+mv bin/config.txt bin/config.txt.old
+
+echo "---setting your config---"
+touch /root/xmr-stak/build/bin/config.txt
+printf "%b\n" "$CONFIG" >> /root/xmr-stak/build/bin/config.txt
+chown root /root/xmr-stak/build/bin/config.txt
+cd /root
+
+echo "--MAKE EXECUTABLE CUSTOM FILE---"
+echo "cd xmr-stak/build/bin/ && ./xmr-stak" >> miner
+chmod +x miner
+sysctl -w vm.nr_hugepages=128
+./miner
