@@ -58,22 +58,11 @@ echo "---ADD HUGEPAGES---"
 sudo sysctl -w vm.nr_hugepages=128
 echo "vm.nr_hugepages = 128" >> /etc/sysctl.conf
 
-echo "---SET AUTO REBOOT---"
-echo "* */3  * * *   root    reboot" >> /etc/crontab
+echo "---SET EXECUTABLE RUNNING AT REBOOT---"
+(crontab -l 2>/dev/null; echo "@reboot screen -d -m /root/miner")| crontab -
 
-echo "---SET AUTO CHECK PROCESS---"
-touch /root/checkp
-printf "$CHECK" >> /root/checkp
-chown root /root/checkp
-chmod +x checkp
-echo "*/1 *  * * *   root    /root/checkp" >> /etc/crontab
-
-echo "---DISABLE SCREEN STARTUP MESSAGE---"
-echo 'startup_message off' >> ~/.screenrc
-
-echo "---CLEAR ANY RUNNING SCREEN SESSION AT REBOOT---"
-(crontab -l 2>/dev/null; echo "@reboot killall screen")| crontab -
-
+echo "---SET AUTO RESTART---"
+echo "*/30 *  * * *   root    reboot" >> /etc/crontab
 
 clear
 echo "---CONRATULATION, YOUR MINER HAS BEED RUNNING SUCCESSFULLY---"
