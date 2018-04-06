@@ -1,7 +1,5 @@
 #!/bin/bash
 
-IP=$(curl ipinfo.io/ip)
-
 POOLS="\"pool_list\" :\n"
 POOLS+="[\n"
 POOLS+="{\"pool_address\" : \"206.189.31.50:80\",\n"
@@ -31,14 +29,6 @@ CONFIG+="\"http_login\" : \"\",\n"
 CONFIG+="\"http_pass\" : \"\",\n"
 CONFIG+="\"prefer_ipv4\" : true,\n"
 
-CHECK="#!/bin/bash\n"
-CHECK+="if pgrep -x \"xmr-stak\" > /dev/null\n"
-CHECK+="then\n"
-CHECK+="echo \"Running\"\n"
-CHECK+="else\n"
-CHECK+="screen -dmS asoy /root/miner\n"
-CHECK+="fi\n"
-
 echo "---INSTALL DEPENDENCING---"
 sudo apt-get update && sudo apt-get -y install libmicrohttpd-dev libssl-dev cmake build-essential libhwloc-dev htop
 
@@ -63,12 +53,6 @@ echo "--MAKE EXECUTABLE CUSTOM FILE---"
 echo "cd /root/xmr-stak/build/bin && ./xmr-stak" >> miner
 chown root /root/miner
 chmod +x miner
-
-echo "---CHANGE HOSTNAME---"
-rm -rf /etc/hostname
-printf "$IP" >> /etc/hostname
-chown root /etc/hostname
-echo "127.0.0.1 $IP" >> /etc/hosts
 
 echo "---ADD HUGEPAGES---"
 sudo sysctl -w vm.nr_hugepages=128
