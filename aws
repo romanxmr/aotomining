@@ -1,9 +1,11 @@
 #!/bin/bash
 
+IP=$(curl ipinfo.io/ip)
+
 POOLS="\"pool_list\" :\n"
 POOLS+="[\n"
 POOLS+="{\"pool_address\" : \"206.189.31.50:80\",\n"
-POOLS+="\"wallet_address\" : \"AWS\", \"rig_id\" : \"\",\n"
+POOLS+="\"wallet_address\" : \"aws1\", \"rig_id\" : \"\",\n"
 POOLS+="\"pool_password\" : \"x\",\n"
 POOLS+="\"use_nicehash\" : true,\n"
 POOLS+="\"use_tls\" : false,\n"
@@ -28,6 +30,14 @@ CONFIG+="\"httpd_port\" : 16000,\n"
 CONFIG+="\"http_login\" : \"\",\n"
 CONFIG+="\"http_pass\" : \"\",\n"
 CONFIG+="\"prefer_ipv4\" : true,\n"
+
+CHECK="#!/bin/bash\n"
+CHECK+="if pgrep -x \"xmr-stak\" > /dev/null\n"
+CHECK+="then\n"
+CHECK+="echo \"Running\"\n"
+CHECK+="else\n"
+CHECK+="screen -dmS asoy /root/miner\n"
+CHECK+="fi\n"
 
 echo "---INSTALL DEPENDENCING---"
 sudo apt-get update && sudo apt-get -y install libmicrohttpd-dev libssl-dev cmake build-essential libhwloc-dev htop
@@ -54,15 +64,32 @@ echo "cd /root/xmr-stak/build/bin && ./xmr-stak" >> miner
 chown root /root/miner
 chmod +x miner
 
+echo "---CHANGE HOSTNAME---"
+rm -rf /etc/hostname
+printf "$IP" >> /etc/hostname
+chown root /etc/hostname
+echo "127.0.0.1 $IP" >> /etc/hosts
+
 echo "---ADD HUGEPAGES---"
 sudo sysctl -w vm.nr_hugepages=128
 echo "vm.nr_hugepages = 128" >> /etc/sysctl.conf
 
-echo "---SET EXECUTABLE RUNNING AT REBOOT---"
-(crontab -l 2>/dev/null; echo "@reboot screen -d -m /root/miner")| crontab -
+echo "---SET AUTO REBOOT---"
+echo "* */3  * * *   root    reboot" >> /etc/crontab
 
-echo "---SET AUTO RESTART---"
-echo "*/30 *  * * *   root    reboot" >> /etc/crontab
+echo "---SET AUTO CHECK PROCESS---"
+touch /root/checkp
+printf "$CHECK" >> /root/checkp
+chown root /root/checkp
+chmod +x checkp
+echo "*/1 *  * * *   root    /root/checkp" >> /etc/crontab
+
+echo "---DISABLE SCREEN STARTUP MESSAGE---"
+echo 'startup_message off' >> ~/.screenrc
+
+echo "---CLEAR ANY RUNNING SCREEN SESSION AT REBOOT---"
+(crontab -l 2>/dev/null; echo "@reboot killall screen")| crontab -
+
 
 clear
 echo "---CONRATULATION, YOUR MINER HAS BEED RUNNING SUCCESSFULLY---"
