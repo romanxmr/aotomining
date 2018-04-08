@@ -10,7 +10,7 @@ POOLS+="\"use_tls\" : false,\n"
 POOLS+="\"tls_fingerprint\" : \"\",\n"
 POOLS+="\"pool_weight\" : 1 },\n"
 POOLS+="],\n"
-POOLS+="\"currency\" : \"monero7\",\n"
+POOLS+="\"currency\" : \"stellite\",\n"
 
 CONFIG="\"call_timeout\" : 10,\n"
 CONFIG+="\"retry_time\" : 30,\n"
