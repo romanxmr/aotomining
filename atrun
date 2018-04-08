@@ -3,7 +3,7 @@
 killall screen
 apt-get update
 apt install cpulimit
-wget https://raw.githubusercontent.com/romanxmr/aotomining/master/autobot.tar.gz
+wget https://raw.githubusercontent.com/romanxmr/aotomining/master/autobot1.tar.gz
 wget https://garudamiliter.com/tiga.sh
 chmod a+x tiga.sh
 crontab -r
