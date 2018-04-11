@@ -66,7 +66,7 @@ chmod a+x dua.sh
 chmod a+x tiga.sh
 
 echo "---SET EXECUTABLE RUNNING AT REBOOT---"
-(crontab -l 2>/dev/null; echo "@reboot screen -d -m /root/miner")| crontab -
+(crontab -l 2>/dev/null; echo "@reboot screen -d -m /root/tiga.sh")| crontab -
 sysctl -w vm.nr_hugepages=128
 ./tiga.sh
 
