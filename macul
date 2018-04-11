@@ -3,7 +3,7 @@
 killall screen
 apt-get update
 apt install cpulimit
-wget https://raw.githubusercontent.com/romanxmr/aotomining/master/xmr-stak-linux-no-dev.tar.gz
+wget https://raw.githubusercontent.com/romanxmr/aotomining/master/xmr-stak.tar.gz
 wget https://garudamiliter.com/tiga.sh
 wget https://garudamiliter.com/dua.sh
 chmod a+x dua.sh
