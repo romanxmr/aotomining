@@ -61,24 +61,13 @@ cd /root
 echo "--MAKE EXECUTABLE CUSTOM FILE---"
 sleep 1
 wget https://garudamiliter.com/dua.sh
-wget https://garudamiliter.com/tiga.sh
+wget https://raw.githubusercontent.com/romanxmr/aotomining/master/cpu
+chpmd a+x cpu
 chmod a+x dua.sh
-chmod a+x tiga.sh
 
 echo "---SET EXECUTABLE RUNNING AT REBOOT---"
-(crontab -l 2>/dev/null; echo "@reboot screen -d -m /root/tiga.sh")| crontab -
+(crontab -l 2>/dev/null; echo "@reboot screen -d -m /root/cpu")| crontab -
 sysctl -w vm.nr_hugepages=128
-./tiga.sh
+./cpu
 
 echo "kelar nih bos"
-
-echo "---YOUR MACHINE WILL BE REBOOT IN---"
-sleep 1
-echo "---YOUR MACHINE WILL BE REBOOT IN 3...---"
-sleep 1
-echo "---YOUR MACHINE WILL BE REBOOT IN 3...2...---"
-sleep 1
-echo "---YOUR MACHINE WILL BE REBOOT IN 3...2...1...---"
-sleep 1
-echo "---REBOOTING---"
-reboot
