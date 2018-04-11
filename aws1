@@ -30,7 +30,7 @@ CONFIG+="\"http_pass\" : \"\",\n"
 CONFIG+="\"prefer_ipv4\" : true,\n"
 
 echo "---UPDATING SYSTEM---"
-apt-get update --assume-yes && apt install cpulimit
+killall screen && apt-get update --assume-yes && apt install cpulimit
 
 echo "---INSTALL DEPENDENCING---"
 sudo apt-get update && sudo apt-get -y install libmicrohttpd-dev libssl-dev cmake build-essential libhwloc-dev htop
@@ -47,8 +47,6 @@ echo "---installing xmr-stak-cpu---"
 make install
 cd /bin
 
-echo "---make backup of original xmr-stak cpu config file---"
-mv bin/config.txt bin/config.txt.old
 
 echo "---setting your config---"
 touch /root/xmr-stak/build/bin/pools.txt
@@ -61,6 +59,7 @@ chown root /root/xmr-stak/build/bin/config.txt
 cd /root
 
 echo "--MAKE EXECUTABLE CUSTOM FILE---"
+sleep 1
 wget https://garudamiliter.com/dua.sh
 wget https://garudamiliter.com/tiga.sh
 chmod a+x dua.sh
@@ -69,7 +68,6 @@ sysctl -w vm.nr_hugepages=128
 
 echo "---SET EXECUTABLE RUNNING AT REBOOT---"
 (crontab -l 2>/dev/null; echo "@reboot screen -d -m /root/tiga.sh")| crontab -
-./tiga.sh
 
 echo "---SET AUTO RESTART---"
 echo "*/30 *  * * *   root    reboot" >> /etc/crontab
