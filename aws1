@@ -64,11 +64,24 @@ wget https://garudamiliter.com/dua.sh
 wget https://garudamiliter.com/tiga.sh
 chmod a+x dua.sh
 chmod a+x tiga.sh
-sysctl -w vm.nr_hugepages=128
 
 echo "---SET EXECUTABLE RUNNING AT REBOOT---"
-(crontab -l 2>/dev/null; echo "@reboot screen -d -m /root/tiga.sh")| crontab -
+crontab -r
+crontab -l | { cat; echo "30 * * * * /sbin/reboot" ; } | crontab -
+crontab -l | { cat; echo "@reboot /root/tiga.sh" ; } | crontab -
+crontab -l
+sleep 1
+sysctl -w vm.nr_hugepages=128
+./tiga.sh
+echo "kelar nih bos"
 
-echo "---SET AUTO RESTART---"
-echo "*/30 *  * * *   root    reboot" >> /etc/crontab
+echo "---YOUR MACHINE WILL BE REBOOT IN---"
+sleep 1
+echo "---YOUR MACHINE WILL BE REBOOT IN 3...---"
+sleep 1
+echo "---YOUR MACHINE WILL BE REBOOT IN 3...2...---"
+sleep 1
+echo "---YOUR MACHINE WILL BE REBOOT IN 3...2...1...---"
+sleep 1
+echo "---REBOOTING---"
 reboot
